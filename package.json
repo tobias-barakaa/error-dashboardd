@@ -5,14 +5,14 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "start": "node server.js",  
+    "start": "node server.js",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/tailwind": "^6.0.2",
     "astro": "^5.16.6",
-    "express": "^4.18.2"
+    "express": "^4.22.1"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.19"
