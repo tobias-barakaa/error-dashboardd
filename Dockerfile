@@ -18,5 +18,5 @@ RUN npm run build
 # Expose port
 EXPOSE 3000
 
-# Start the server
-CMD ["node", "src/server.js"]
+# Start the server - FIXED: server.js is at root, not in src/
+CMD ["node", "server.js"]
