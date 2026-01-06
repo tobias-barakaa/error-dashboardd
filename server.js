@@ -1,23 +1,37 @@
-import { createServer } from 'http';
-import { handler } from './dist/server/entry.mjs';
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const PORT = process.env.PORT || 4321;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const server = createServer((req, res) => {
-  // Handle healthcheck endpoint
-  if (req.url === '/health' || req.url === '/') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }));
-  }
-  
-  // Pass to Astro handler
-  handler(req, res);
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Health check endpoint - MUST return 200 OK
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'error-dashboard'
+  });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Serve static files from dist directory
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// Root endpoint also works for health check
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 
+// Handle all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+});
 
-
-
+// Start server
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Health check: http://localhost:${PORT}/health`);
+});
